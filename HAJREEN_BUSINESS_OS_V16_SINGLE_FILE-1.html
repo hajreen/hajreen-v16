@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07090b">
+<title>HAJREEN — Business Intelligence System</title>
+<style>
+:root{
+  --bg:#050709;--panel:#0b0f12;--panel2:#10161a;--panel3:#141b20;
+  --line:#253039;--muted:#7f8b93;--text:#f4f5f6;--gold:#dcae55;--gold2:#f5cf78;
+  --green:#35d49a;--red:#ff6674;--blue:#3eb5ff;--purple:#9b7cff;--shadow:0 18px 60px rgba(0,0,0,.38);
+  --radius:18px;
+}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.hidden{display:none!important}
+.app-shell{min-height:100vh;display:flex;background:
+ radial-gradient(circle at 70% 0%,rgba(220,174,85,.07),transparent 28%),
+ linear-gradient(180deg,#06080a,#050709 60%,#07090b)}
+.sidebar{width:258px;position:fixed;inset:0 auto 0 0;background:rgba(7,10,12,.94);border-right:1px solid var(--line);z-index:20;display:flex;flex-direction:column}
+.brand{height:86px;display:flex;align-items:center;gap:12px;padding:0 22px;border-bottom:1px solid var(--line)}
+.brand-mark{width:42px;height:42px;border:1px solid rgba(220,174,85,.55);display:grid;place-items:center;color:var(--gold2);font-weight:900;font-size:24px;border-radius:10px;background:linear-gradient(145deg,#18130a,#080a0b)}
+.brand strong{letter-spacing:4px;font-size:17px}.brand small{display:block;color:#778188;letter-spacing:2px;font-size:8px;margin-top:4px}
+.nav{padding:16px 12px;overflow:auto}.nav button{width:100%;display:flex;align-items:center;gap:12px;background:transparent;color:#aab3b8;border:0;padding:12px 13px;border-radius:11px;text-align:left;margin-bottom:3px;font-size:13px}
+.nav button:hover{background:#11171b;color:#fff}.nav button.active{background:linear-gradient(90deg,rgba(220,174,85,.18),rgba(220,174,85,.04));color:#fff;border:1px solid rgba(220,174,85,.26)}
+.ico{width:19px;height:19px;display:grid;place-items:center;color:currentColor;font-size:15px;flex:0 0 19px}
+.sidebar-bottom{margin-top:auto;padding:14px;border-top:1px solid var(--line)}
+.status-mini{display:flex;align-items:center;gap:8px;color:#99a5aa;font-size:11px}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(53,212,154,.7)}
+.main{margin-left:258px;min-width:0;flex:1}.topbar{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 26px;position:sticky;top:0;background:rgba(5,7,9,.84);backdrop-filter:blur(16px);z-index:15}
+.search{height:40px;flex:1;max-width:520px;background:#0e1418;border:1px solid var(--line);border-radius:11px;padding:0 14px;color:#fff;outline:none}.search:focus{border-color:#6b5937;box-shadow:0 0 0 3px rgba(220,174,85,.07)}
+.top-actions{margin-left:auto;display:flex;gap:8px}.icon-btn,.ghost-btn{height:40px;min-width:40px;border:1px solid var(--line);background:#0d1215;color:#cbd0d3;border-radius:10px}.icon-btn:hover,.ghost-btn:hover{border-color:#5d4c2f;color:#fff}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#e8c87a;color:#090b0c;font-weight:800}
+.content{padding:28px;max-width:1700px;margin:auto}.page-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin-bottom:22px}.eyebrow{color:var(--gold2);font-size:10px;letter-spacing:3px;font-weight:700;text-transform:uppercase}.title{font-size:31px;line-height:1.1;margin:7px 0}.subtitle{color:var(--muted);font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap}.primary{background:linear-gradient(135deg,#f5cf78,#c8943e);border:0;color:#080a0b;padding:11px 15px;border-radius:10px;font-weight:800}.secondary{background:#10161a;border:1px solid #303b43;color:#e4e7e9;padding:10px 14px;border-radius:10px}.danger{color:#ff8994!important}
+.grid{display:grid;gap:14px}.metrics{grid-template-columns:repeat(6,minmax(0,1fr))}.metric{background:linear-gradient(145deg,#0d1317,#0a0e11);border:1px solid var(--line);border-radius:var(--radius);padding:17px;min-height:124px;box-shadow:var(--shadow);position:relative;overflow:hidden}.metric:after{content:"";position:absolute;right:-35px;bottom:-45px;width:100px;height:100px;border-radius:50%;background:rgba(220,174,85,.05);filter:blur(2px)}.metric-label{color:#8c979d;text-transform:uppercase;letter-spacing:1.7px;font-size:10px}.metric-value{font-size:25px;font-weight:800;margin:13px 0 6px}.metric-foot{font-size:10px;color:#69757b}.up{color:var(--green)}.down{color:var(--red)}
+.two{grid-template-columns:1.45fr 1fr}.three{grid-template-columns:repeat(3,1fr)}.panel{background:linear-gradient(145deg,#0d1317,#090d10);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.panel-head{display:flex;align-items:center;justify-content:space-between;padding:17px 18px;border-bottom:1px solid rgba(37,48,57,.75)}.panel-title{font-size:13px;font-weight:750}.panel-sub{font-size:10px;color:var(--muted);margin-top:3px}.panel-body{padding:18px}.section-gap{margin-top:14px}
+.chart{height:245px;position:relative;padding:8px}.chart svg{width:100%;height:100%}.legend{display:flex;gap:14px;font-size:10px;color:#8c979d;margin-top:8px}.legend span{display:flex;gap:5px;align-items:center}.legend i{width:7px;height:7px;border-radius:2px;background:var(--gold)}
+.list{display:flex;flex-direction:column}.row{display:grid;grid-template-columns:1.4fr .8fr .7fr .7fr;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid rgba(37,48,57,.6);font-size:11px}.row:last-child{border-bottom:0}.row b{font-size:12px}.muted{color:var(--muted)}.pill{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:800;border:1px solid var(--line);background:#10161a}.pill.green{color:var(--green);border-color:rgba(53,212,154,.25);background:rgba(53,212,154,.06)}.pill.red{color:var(--red);border-color:rgba(255,102,116,.25);background:rgba(255,102,116,.06)}.pill.gold{color:var(--gold2);border-color:rgba(220,174,85,.25);background:rgba(220,174,85,.06)}
+.bar-list{display:flex;flex-direction:column;gap:13px}.bar-line{display:grid;grid-template-columns:100px 1fr 50px;align-items:center;gap:10px;font-size:10px}.bar-track{height:7px;border-radius:99px;background:#182126;overflow:hidden}.bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#b98737,#f1cc76)}
+.health{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center}.ring{width:140px;height:140px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--gold2) 0 92%,#1a2227 92% 100%);position:relative}.ring:after{content:"";position:absolute;inset:12px;border-radius:50%;background:#0b1013}.ring strong{position:relative;z-index:1;font-size:28px}.health-list{display:flex;flex-direction:column;gap:10px}.health-item{display:flex;justify-content:space-between;color:#aeb6ba;font-size:11px}.health-item b{color:#fff}
+.page{display:none}.page.active{display:block}
+.table-wrap{overflow:auto}.data-table{width:100%;border-collapse:collapse;min-width:760px}.data-table th{color:#7f8b93;text-transform:uppercase;letter-spacing:1px;font-size:9px;text-align:left;padding:11px;border-bottom:1px solid var(--line)}.data-table td{padding:12px 11px;border-bottom:1px solid rgba(37,48,57,.55);font-size:11px}.data-table tr:hover td{background:rgba(255,255,255,.015)}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:10px;color:#9ba5aa;text-transform:uppercase;letter-spacing:1px}.field input,.field select,.field textarea{width:100%;background:#0a0f12;border:1px solid #2a353d;border-radius:10px;color:#fff;padding:11px;outline:none}.field textarea{min-height:90px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:#7c643a}.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.mini-kpi{padding:13px;border:1px solid var(--line);background:#0b1013;border-radius:12px}.mini-kpi small{color:#7f8b93;font-size:9px}.mini-kpi b{display:block;font-size:17px;margin-top:7px}
+.ai-shell{display:grid;grid-template-columns:1fr 330px;gap:14px}.ai-main{min-height:560px}.ai-feed{height:390px;overflow:auto;padding:18px}.msg{max-width:82%;padding:12px 14px;border-radius:13px;margin-bottom:10px;font-size:12px;line-height:1.55}.msg.ai{background:#10171b;border:1px solid var(--line);color:#dce1e4}.msg.user{margin-left:auto;background:rgba(220,174,85,.12);border:1px solid rgba(220,174,85,.22);color:#f4e3bd}.ai-compose{display:flex;gap:8px;padding:13px;border-top:1px solid var(--line)}.ai-compose input{flex:1;background:#090d10;border:1px solid var(--line);border-radius:10px;color:#fff;padding:12px}.insight{padding:13px;border:1px solid var(--line);background:#0c1215;border-radius:12px;margin-bottom:9px}.insight strong{display:block;font-size:11px;margin-bottom:5px}.insight p{margin:0;color:#8f9a9f;font-size:10px;line-height:1.45}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);z-index:100;display:none;align-items:center;justify-content:center;padding:18px}.modal.open{display:flex}.modal-card{width:min(720px,100%);max-height:90vh;overflow:auto;background:#0b1013;border:1px solid #35414a;border-radius:18px;box-shadow:0 30px 100px rgba(0,0,0,.7)}.modal-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.modal-body{padding:18px}
+.toast{position:fixed;right:20px;bottom:20px;background:#10171b;border:1px solid #35414a;color:#fff;padding:12px 15px;border-radius:11px;z-index:200;box-shadow:var(--shadow);font-size:11px;display:none}.toast.show{display:block}
+.landing{min-height:100vh;background:
+ linear-gradient(90deg,rgba(4,7,9,.96) 0%,rgba(4,7,9,.88) 45%,rgba(4,7,9,.5) 100%),
+ radial-gradient(circle at 72% 38%,rgba(220,174,85,.15),transparent 28%);display:none}.landing.show{display:block}.landing-nav{height:76px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;padding:0 6vw;gap:30px}.landing-nav .links{display:flex;gap:26px;margin-left:auto;color:#9da7ac;font-size:11px}.landing-hero{min-height:calc(100vh - 76px);display:grid;grid-template-columns:1fr 1.15fr;align-items:center;gap:30px;padding:6vh 6vw}.hero-copy h1{font-size:clamp(45px,6vw,82px);line-height:.94;margin:13px 0}.hero-copy h1 span{color:var(--gold2)}.hero-copy p{color:#9da7ac;max-width:570px;line-height:1.7;font-size:14px}.hero-card{border:1px solid rgba(220,174,85,.35);border-radius:22px;background:linear-gradient(145deg,rgba(16,25,30,.94),rgba(7,11,13,.94));box-shadow:0 40px 100px rgba(0,0,0,.55);padding:16px;transform:perspective(1300px) rotateY(-5deg)}.hero-screen{border:1px solid #26333b;border-radius:14px;padding:13px;background:#071014}.hero-screen-top{display:flex;gap:7px;margin-bottom:12px}.tiny{height:6px;width:6px;border-radius:50%;background:#536067}.hero-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.hero-metric{height:58px;background:#0d171c;border:1px solid #1d2b32;border-radius:8px;padding:8px}.hero-metric small{color:#66747b;font-size:7px}.hero-metric b{display:block;font-size:13px;margin-top:5px}.hero-chart{height:140px;margin-top:8px;border:1px solid #1d2b32;border-radius:8px;background:linear-gradient(180deg,#0d171c,#081014);display:grid;place-items:center}.feature-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:28px}.feature{border-top:1px solid rgba(220,174,85,.28);padding-top:12px}.feature b{font-size:11px}.feature p{font-size:9px;color:#69757b;line-height:1.5;margin:5px 0}
+@media(max-width:1200px){.metrics{grid-template-columns:repeat(3,1fr)}.two{grid-template-columns:1fr}.three{grid-template-columns:1fr 1fr}.sidebar{width:225px}.main{margin-left:225px}}
+@media(max-width:850px){.sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.topbar{padding:0 14px}.content{padding:17px}.metrics{grid-template-columns:1fr 1fr}.three,.ai-shell{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}.landing-hero{grid-template-columns:1fr}.landing-nav .links{display:none}.hero-card{transform:none}.health{grid-template-columns:1fr}.health .ring{margin:auto}}
+@media(max-width:540px){.metrics{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.page-head{align-items:flex-start;flex-direction:column}.title{font-size:25px}.topbar{height:64px}.search{max-width:none}.top-actions .ghost-btn{display:none}.feature-strip{grid-template-columns:1fr 1fr}.hero-metrics{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<section id="landing" class="landing show">
+  <header class="landing-nav">
+    <div class="brand" style="height:auto;border:0;padding:0">
+      <div class="brand-mark">H</div><div><strong>HAJREEN</strong><small>BUSINESS MANAGEMENT SYSTEM</small></div>
+    </div>
+    <div class="links"><span>Home</span><span>Product</span><span>Features</span><span>Pricing</span><span>About</span><span>Contact</span></div>
+    <button class="secondary" onclick="enterApp()">Sign In</button>
+    <button class="primary" onclick="enterApp()">Get Started →</button>
+  </header>
+  <main class="landing-hero">
+    <div class="hero-copy">
+      <div class="eyebrow">ALL-IN-ONE BUSINESS INTELLIGENCE</div>
+      <h1>Manage Smarter.<br><span>Grow Bigger.</span></h1>
+      <p>HAJREEN is a premium business management operating system for ambitious businesses. Sales, inventory, customers, payments, wholesale, finance, marketing and AI intelligence — in one command center.</p>
+      <div class="actions" style="margin-top:22px"><button class="primary" onclick="enterApp()">Open CEO Command Center →</button><button class="secondary" onclick="demoToast()">Watch Demo</button></div>
+      <div class="feature-strip">
+        <div class="feature"><b>∞ One Platform</b><p>Infinite possibilities across every business function.</p></div>
+        <div class="feature"><b>10× Faster</b><p>Reduce repetitive operations with connected workflows.</p></div>
+        <div class="feature"><b>100% Control</b><p>Know cash, stock, customers and performance.</p></div>
+        <div class="feature"><b>AI CEO</b><p>Turn business data into decisions and actions.</p></div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-screen">
+        <div class="hero-screen-top"><i class="tiny"></i><i class="tiny"></i><i class="tiny"></i><span style="margin-left:auto;color:#6d787e;font-size:8px">HAJREEN / CEO</span></div>
+        <div class="hero-metrics">
+          <div class="hero-metric"><small>REVENUE</small><b>TSh 124.5M</b></div>
+          <div class="hero-metric"><small>NET PROFIT</small><b>TSh 42.3M</b></div>
+          <div class="hero-metric"><small>ORDERS</small><b>1,842</b></div>
+          <div class="hero-metric"><small>STOCK</small><b>TSh 289.4M</b></div>
+        </div>
+        <div class="hero-chart">
+          <svg viewBox="0 0 600 180" preserveAspectRatio="none">
+            <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#dcae55" stop-opacity=".3"/><stop offset="1" stop-color="#dcae55" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0 145 L55 135 L105 142 L155 112 L205 120 L255 83 L305 99 L355 65 L405 76 L455 42 L505 58 L555 30 L600 45 L600 180 L0 180Z" fill="url(#g)"/>
+            <polyline points="0,145 55,135 105,142 155,112 205,120 255,83 305,99 355,65 405,76 455,42 505,58 555,30 600,45" fill="none" stroke="#f1cc76" stroke-width="3"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<div id="appShell" class="app-shell hidden">
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">H</div>
+      <div><strong>HAJREEN</strong><small>BUSINESS INTELLIGENCE</small></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sidebar-bottom"><div class="status-mini"><span class="dot"></span><span id="cloudStatus">Local engine active</span></div></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn" onclick="toggleSidebar()">☰</button>
+      <input id="globalSearch" class="search" placeholder="Search anything — customers, products, orders..." oninput="globalSearch(this.value)">
+      <div class="top-actions">
+        <button class="ghost-btn" onclick="openModal('quick')">＋</button>
+        <button class="ghost-btn" onclick="showPage('ai')">AI CEO</button>
+        <div class="avatar">S</div>
+      </div>
+    </header>
+
+    <div class="content">
+      <section id="dashboard" class="page active"></section>
+      <section id="sales" class="page"></section>
+      <section id="inventory" class="page"></section>
+      <section id="customers" class="page"></section>
+      <section id="wholesale" class="page"></section>
+      <section id="payments" class="page"></section>
+      <section id="expenses" class="page"></section>
+      <section id="marketing" class="page"></section>
+      <section id="reports" class="page"></section>
+      <section id="ai" class="page"></section>
+      <section id="team" class="page"></section>
+      <section id="settings" class="page"></section>
+    </div>
+  </main>
+</div>
+
+<div id="modal" class="modal"><div class="modal-card"><div class="modal-head"><b id="modalTitle">Action</b><button class="icon-btn" onclick="closeModal()">×</button></div><div id="modalBody" class="modal-body"></div></div></div>
+<div id="toast" class="toast"></div>
+
+<script>
+const NAV=[
+ ['dashboard','⌂','Dashboard'],['sales','▣','Sales & Invoicing'],['inventory','▤','Inventory Control'],['customers','♙','Customer 360'],
+ ['wholesale','◇','Wholesale CRM'],['payments','◈','Payments & Credit'],['expenses','◫','Expenses & Cashflow'],
+ ['marketing','◌','Marketing'],['reports','▥','Reports & Analytics'],['ai','✦','AI CEO'],['team','♧','Team'],['settings','⚙','Settings']
+];
+
+const seed={
+ products:[
+  {id:'P001',name:'Lace Fabric A1',category:'Lace',cost:18000,sell:32000,stock:120,reorder:25},
+  {id:'P002',name:'Cotton Fabric B2',category:'Cotton',cost:12000,sell:24000,stock:87,reorder:20},
+  {id:'P003',name:'Satin Fabric C3',category:'Satin',cost:7000,sell:14000,stock:42,reorder:15},
+  {id:'P004',name:'Chiffon D4',category:'Chiffon',cost:6500,sell:13000,stock:18,reorder:20},
+  {id:'P005',name:'Linen E5',category:'Linen',cost:9000,sell:18000,stock:56,reorder:15}
+ ],
+ customers:[
+  {id:'C001',name:'Amina Said',phone:'0712 000 101',whatsapp:'0712 000 101',type:'Retail',location:'Dar es Salaam',total:560000,paid:560000,balance:0,last:'21 Sep 2026'},
+  {id:'C002',name:'Juma Traders',phone:'0754 000 202',whatsapp:'0754 000 202',type:'Wholesale',location:'Mwanza',total:1340000,paid:900000,balance:440000,last:'20 Sep 2026'},
+  {id:'C003',name:'Rehema Musa',phone:'0768 000 303',whatsapp:'0768 000 303',type:'Retail',location:'Arusha',total:350000,paid:350000,balance:0,last:'20 Sep 2026'},
+  {id:'C004',name:'Smart Stores',phone:'0744 000 404',whatsapp:'0744 000 404',type:'Wholesale',location:'Dodoma',total:2800000,paid:1800000,balance:1000000,last:'20 Sep 2026'},
+  {id:'C005',name:'Halima Seif',phone:'0788 000 505',whatsapp:'0788 000 505',type:'Retail',location:'Zanzibar',total:720000,paid:500000,balance:220000,last:'19 Sep 2026'}
+ ],
+ sales:[
+  {id:'S001',customer:'Amina Said',items:4,total:560000,paid:560000,method:'Mobile Money',date:'21 Sep 2026',status:'Paid'},
+  {id:'S002',customer:'Juma Traders',items:12,total:1340000,paid:900000,method:'Bank',date:'20 Sep 2026',status:'Partial'},
+  {id:'S003',customer:'Rehema Musa',items:3,total:350000,paid:350000,method:'Cash',date:'20 Sep 2026',status:'Paid'},
+  {id:'S004',customer:'Smart Stores',items:20,total:2800000,paid:1800000,method:'Bank',date:'20 Sep 2026',status:'Partial'},
+  {id:'S005',customer:'Halima Seif',items:5,total:720000,paid:500000,method:'Cash',date:'19 Sep 2026',status:'Partial'}
+ ],
+ payments:[
+  {id:'PAY001',customer:'Amina Said',amount:560000,method:'Mobile Money',network:'M-Pesa',reference:'MP24092101',date:'21 Sep 2026'},
+  {id:'PAY002',customer:'Juma Traders',amount:900000,method:'Bank',network:'NMB',reference:'NMB998821',date:'20 Sep 2026'},
+  {id:'PAY003',customer:'Rehema Musa',amount:350000,method:'Cash',network:'',reference:'CASH-003',date:'20 Sep 2026'},
+  {id:'PAY004',customer:'Smart Stores',amount:1800000,method:'Bank',network:'CRDB',reference:'CRDB778811',date:'20 Sep 2026'},
+  {id:'PAY005',customer:'Halima Seif',amount:500000,method:'Cash',network:'',reference:'CASH-005',date:'19 Sep 2026'}
+ ],
+ expenses:[
+  {id:'E001',category:'Transport',amount:180000,date:'21 Sep 2026',note:'Cargo delivery'},
+  {id:'E002',category:'Marketing',amount:250000,date:'20 Sep 2026',note:'Campaign'},
+  {id:'E003',category:'Operations',amount:120000,date:'19 Sep 2026',note:'Packaging'},
+  {id:'E004',category:'Rent',amount:450000,date:'18 Sep 2026',note:'Store'}
+ ],
+ wholesale:[
+  {id:'W001',name:'Juma Traders',location:'Mwanza',value:12500000,stage:'Negotiation',prob:70},
+  {id:'W002',name:'Smart Stores',location:'Dodoma',value:8200000,stage:'Proposal',prob:55},
+  {id:'W003',name:'Mlimani Textiles',location:'Dar es Salaam',value:5400000,stage:'Qualified',prob:40},
+  {id:'W004',name:'Lake Zone Fashion',location:'Mwanza',value:18600000,stage:'New Lead',prob:20}
+ ],
+ marketing:[
+  {id:'M001',campaign:'September Luxury Launch',channel:'Instagram',spend:450000,leads:84,orders:16,revenue:5200000},
+  {id:'M002',campaign:'WhatsApp Wholesale Push',channel:'WhatsApp',spend:280000,leads:41,orders:11,revenue:4100000},
+  {id:'M003',campaign:'TikTok Product Demo',channel:'TikTok',spend:190000,leads:58,orders:9,revenue:2300000}
+ ],
+ team:[
+  {id:'T001',name:'Sales Lead',role:'Sales',status:'Active'},
+  {id:'T002',name:'Inventory Manager',role:'Operations',status:'Active'},
+  {id:'T003',name:'Marketing Lead',role:'Marketing',status:'Active'}
+ ],
+ activity:[
+  {time:'21 Sep 2026 18:40',text:'Payment received from Amina Said',type:'payment'},
+  {time:'21 Sep 2026 17:10',text:'New wholesale lead: Lake Zone Fashion',type:'lead'},
+  {time:'21 Sep 2026 15:20',text:'Stock alert: Chiffon D4 below reorder level',type:'stock'},
+  {time:'20 Sep 2026 12:30',text:'Sale S004 recorded for Smart Stores',type:'sale'}
+ ]
+};
+
+let DB=loadDB(), currentPage='dashboard', modalMode='';
+function loadDB(){try{const x=JSON.parse(localStorage.getItem('hajreen_v16_single'));return x?merge(seed,x):structuredClone(seed)}catch(e){return structuredClone(seed)}}
+function merge(a,b){const o=structuredClone(a);Object.keys(b||{}).forEach(k=>o[k]=Array.isArray(b[k])?b[k]:b[k]);return o}
+function save(){localStorage.setItem('hajreen_v16_single',JSON.stringify(DB)); renderAll()}
+function money(n){return 'TSh '+Number(n||0).toLocaleString('en-TZ')}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function sum(arr,key){return arr.reduce((a,x)=>a+Number(x[key]||0),0)}
+function id(prefix){return prefix+String(Date.now()).slice(-6)}
+function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)}
+function demoToast(){toast('Demo mode: open the CEO Command Center to explore the engine.')}
+function enterApp(){document.getElementById('landing').classList.remove('show');document.getElementById('landing').classList.add('hidden');document.getElementById('appShell').classList.remove('hidden');renderAll()}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function showPage(p){currentPage=p;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p).classList.add('active');document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));renderPage(p);if(innerWidth<850)document.getElementById('sidebar').classList.remove('open')}
+function renderNav(){document.getElementById('nav').innerHTML=NAV.map(n=>`<button data-page="${n[0]}" class="${n[0]===currentPage?'active':''}" onclick="showPage('${n[0]}')"><span class="ico">${n[1]}</span>${n[2]}</button>`).join('')}
+function renderAll(){renderNav();renderPage(currentPage);document.getElementById('cloudStatus').textContent='Local engine active'}
+function renderPage(p){
+ const f={dashboard:renderDashboard,sales:renderSales,inventory:renderInventory,customers:renderCustomers,wholesale:renderWholesale,payments:renderPayments,expenses:renderExpenses,marketing:renderMarketing,reports:renderReports,ai:renderAI,team:renderTeam,settings:renderSettings};
+ if(f[p])document.getElementById(p).innerHTML=f[p]();
+}
+function pageHead(k,t,s,buttons=''){return `<div class="page-head"><div><div class="eyebrow">${k}</div><div class="title">${t}</div><div class="subtitle">${s}</div></div><div class="actions">${buttons}</div></div>`}
+function metric(label,value,foot,cls=''){return `<div class="metric"><div class="metric-label">${label}</div><div class="metric-value ${cls}">${value}</div><div class="metric-foot">${foot}</div></div>`}
+function svgChart(){
+ const vals=[42,55,49,72,66,88,101,96,118,108,131,145], max=150;
+ const pts=vals.map((v,i)=>`${i*(600/11)},${185-v/max*145}`).join(' ');
+ return `<div class="chart"><svg viewBox="0 0 600 210" preserveAspectRatio="none"><g stroke="#1d282e" stroke-width="1">${[35,75,115,155,195].map(y=>`<line x1="0" y1="${y}" x2="600" y2="${y}"/>`).join('')}</g><polyline points="${pts}" fill="none" stroke="#dcae55" stroke-width="3"/><polyline points="${pts} 600,210 0,210" fill="url(#chartFill)" stroke="none"/></svg><div class="legend"><span><i></i>Revenue</span><span><i style="background:#3eb5ff"></i>Trend</span></div></div>`
+}
+function renderDashboard(){
+ const revenue=sum(DB.sales,'total'), paid=sum(DB.sales,'paid'), cogs=DB.sales.reduce((a,s)=>a+s.items*9000,0), expenses=sum(DB.expenses,'amount'), gp=revenue-cogs, np=gp-expenses;
+ const stock=DB.products.reduce((a,p)=>a+p.stock*p.cost,0), recv=revenue-paid, low=DB.products.filter(p=>p.stock<=p.reorder).length;
+ const cash=sum(DB.payments.filter(p=>p.method==='Cash'),'amount'), bank=sum(DB.payments.filter(p=>p.method==='Bank'),'amount'), mobile=sum(DB.payments.filter(p=>p.method==='Mobile Money'),'amount');
+ return pageHead('EXECUTIVE COMMAND CENTER','Good morning, CEO.','A decision-first view of HAJREEN — cash, growth, inventory and execution.',
+ `<button class="secondary" onclick="showPage('reports')">Reports</button><button class="primary" onclick="openModal('sale')">＋ New Sale</button>`)
+ +`<div class="grid metrics">
+ ${metric('Total Revenue',money(revenue),'Gross sales tracked','')}
+ ${metric('Net Profit',money(np),`After ${money(expenses)} expenses`,np>=0?'up':'down')}
+ ${metric('Total Orders',DB.sales.length,'Transactions recorded')}
+ ${metric('Inventory Value',money(stock),'Current stock basis')}
+ ${metric('Receivables',money(recv),`${DB.customers.filter(c=>c.balance>0).length} customers owing`,recv>0?'down':'up')}
+ ${metric('Low Stock',low,low?'Reorder attention required':'Stock healthy',low?'down':'up')}
+ </div>
+ <div class="grid two section-gap">
+  <div class="panel"><div class="panel-head"><div><div class="panel-title">Revenue & Profit</div><div class="panel-sub">Executive trend view</div></div><span class="pill gold">This Year</span></div><div class="panel-body">${svgChart()}</div></div>
+  <div class="panel"><div class="panel-head"><div><div class="panel-title">Cash Collection Mix</div><div class="panel-sub">Received by payment method</div></div></div><div class="panel-body"><div class="bar-list">
+   ${[['Cash',cash],['Bank',bank],['Mobile Money',mobile]].map(x=>`<div class="bar-line"><span>${x[0]}</span><div class="bar-track"><div class="bar-fill" style="width:${paid?Math.min(100,x[1]/paid*100):0}%"></div></div><b>${money(x[1])}</b></div>`).join('')}
+   </div><div style="margin-top:20px" class="kpi-row"><div class="mini-kpi"><small>GROSS MARGIN</small><b>${revenue?Math.round(gp/revenue*100):0}%</b></div><div class="mini-kpi"><small>NET MARGIN</small><b>${revenue?Math.round(np/revenue*100):0}%</b></div><div class="mini-kpi"><small>COLLECTION</small><b>${revenue?Math.round(paid/revenue*100):0}%</b></div><div class="mini-kpi"><small>WHOLESALE</small><b>${money(sum(DB.wholesale,'value'))}</b></div></div>
+  </div></div>
+ </div>
+ <div class="grid three section-gap">
+  <div class="panel"><div class="panel-head"><div><div class="panel-title">Recent Sales</div><div class="panel-sub">Latest commercial activity</div></div><button class="ghost-btn" onclick="showPage('sales')">View all</button></div><div class="panel-body"><div class="list">${DB.sales.slice(-5).reverse().map(s=>`<div class="row"><div><b>${esc(s.customer)}</b><div class="muted">${s.id} · ${s.items} items</div></div><div>${money(s.total)}</div><div>${money(s.paid)}</div><div><span class="pill ${s.status==='Paid'?'green':'gold'}">${s.status}</span></div></div>`).join('')}</div></div></div>
+  <div class="panel"><div class="panel-head"><div><div class="panel-title">Top Products</div><div class="panel-sub">Inventory exposure</div></div></div><div class="panel-body"><div class="bar-list">${DB.products.map(p=>`<div class="bar-line"><span>${esc(p.name)}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.min(100,p.stock/1.2)}%"></div></div><b>${p.stock}</b></div>`).join('')}</div></div></div>
+  <div class="panel"><div class="panel-head"><div><div class="panel-title">AI CEO Insights</div><div class="panel-sub">Decision signals</div></div><button class="ghost-btn" onclick="showPage('ai')">Open AI</button></div><div class="panel-body">
+   ${aiInsights().map(i=>`<div class="insight"><strong>${i.title}</strong><p>${i.text}</p></div>`).join('')}
+  </div></div>
+ </div>
+ <div class="panel section-gap"><div class="panel-head"><div><div class="panel-title">Business Health</div><div class="panel-sub">Operational control indicators</div></div><span class="pill green">LIVE ENGINE</span></div><div class="panel-body"><div class="health"><div class="ring"><strong>${Math.max(0,Math.min(100,92-low*5))}%</strong></div><div class="health-list">
+ ${[['Sales',Math.min(100,70+DB.sales.length*4)],['Inventory',low?78:93],['Payments',Math.round(paid/(revenue||1)*100)],['Customers',88],['Wholesale',Math.min(100,60+DB.wholesale.length*7)]].map(x=>`<div class="health-item"><span>${x[0]}</span><b>${x[1]}%</b></div>`).join('')}
+ </div></div></div></div>`;
+}
+function renderSales(){
+ return pageHead('SALES & INVOICING','Commercial control','Record orders, payments and customer balances from one workflow.',`<button class="primary" onclick="openModal('sale')">＋ New Sale</button>`)
+ +`<div class="kpi-row section-gap">${[['REVENUE',money(sum(DB.sales,'total'))],['PAID',money(sum(DB.sales,'paid'))],['RECEIVABLES',money(sum(DB.sales,'total')-sum(DB.sales,'paid'))],['ORDERS',DB.sales.length]].map(x=>`<div class="mini-kpi"><small>${x[0]}</small><b>${x[1]}</b></div>`).join('')}</div>
+ <div class="panel section-gap"><div class="panel-head"><div><div class="panel-title">Sales Ledger</div><div class="panel-sub">Every order connected to customer and payment history</div></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Invoice</th><th>Customer</th><th>Items</th><th>Total</th><th>Paid</th><th>Balance</th><th>Method</th><th>Status</th><th></th></tr></thead><tbody>${DB.sales.map(s=>`<tr><td><b>${s.id}</b><br><span class="muted">${s.date}</span></td><td>${esc(s.customer)}</td><td>${s.items}</td><td>${money(s.total)}</td><td>${money(s.paid)}</td><td>${money(s.total-s.paid)}</td><td>${s.method}</td><td><span class="pill ${s.status==='Paid'?'green':'gold'}">${s.status}</span></td><td><button class="ghost-btn" onclick="deleteSale('${s.id}')">×</button></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function renderInventory(){
+ const value=sum(DB.products.map(p=>({x:p.stock*p.cost})), 'x'), low=DB.products.filter(p=>p.stock<=p.reorder), out=DB.products.filter(p=>p.stock===0);
+ return pageHead('INVENTORY CONTROL','Inventory intelligence','Track stock, cost, selling price and reorder risk.',`<button class="secondary" onclick="exportCSV('inventory')">Export</button><button class="primary" onclick="openModal('product')">＋ Add Product</button>`)
+ +`<div class="kpi-row section-gap">${[['TOTAL PRODUCTS',DB.products.length],['LOW STOCK',low.length],['OUT OF STOCK',out.length],['INVENTORY VALUE',money(value)]].map(x=>`<div class="mini-kpi"><small>${x[0]}</small><b>${x[1]}</b></div>`).join('')}</div>
+ <div class="panel section-gap"><div class="panel-head"><div><div class="panel-title">Product Master</div><div class="panel-sub">Real stock engine — changes are persisted locally in this single file</div></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>SKU</th><th>Product</th><th>Category</th><th>Cost</th><th>Sell</th><th>Stock</th><th>Stock Value</th><th>Status</th><th></th></tr></thead><tbody>${DB.products.map(p=>`<tr><td>${p.id}</td><td><b>${esc(p.name)}</b></td><td>${p.category}</td><td>${money(p.cost)}</td><td>${money(p.sell)}</td><td>${p.stock}</td><td>${money(p.stock*p.cost)}</td><td><span class="pill ${p.stock===0?'red':p.stock<=p.reorder?'gold':'green'}">${p.stock===0?'Out of Stock':p.stock<=p.reorder?'Low Stock':'In Stock'}</span></td><td><button class="ghost-btn" onclick="deleteProduct('${p.id}')">×</button></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function renderCustomers(){
+ const revenue=sum(DB.sales,'total'), recv=DB.customers.reduce((a,c)=>a+c.balance,0);
+ return pageHead('CUSTOMER 360','Customer command center','Profiles, orders, balances, payment history and follow-up in one place.',`<button class="primary" onclick="openModal('customer')">＋ Add Customer</button>`)
+ +`<div class="kpi-row section-gap">${[['CUSTOMERS',DB.customers.length],['CUSTOMER REVENUE',money(revenue)],['RECEIVABLES',money(recv)],['CREDIT CUSTOMERS',DB.customers.filter(c=>c.balance>0).length]].map(x=>`<div class="mini-kpi"><small>${x[0]}</small><b>${x[1]}</b></div>`).join('')}</div>
+ <div class="panel section-gap"><div class="panel-head"><div><div class="panel-title">Customer Directory</div><div class="panel-sub">Tap View to open a complete customer profile</div></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Customer</th><th>Type</th><th>Location</th><th>Phone</th><th>Total</th><th>Paid</th><th>Balance</th><th>Last Purchase</th><th></th></tr></thead><tbody>${DB.customers.map(c=>`<tr><td><b>${esc(c.name)}</b><br><span class="muted">${c.id}</span></td><td>${c.type}</td><td>${esc(c.location)}</td><td>${esc(c.phone)}</td><td>${money(c.total)}</td><td>${money(c.paid)}</td><td class="${c.balance?'down':''}">${money(c.balance)}</td><td>${c.last}</td><td><button class="ghost-btn" onclick="customer360('${c.id}')">View</button></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function customer360(cid){
+ const c=DB.customers.find(x=>x.id===cid);if(!c)return;
+ const orders=DB.sales.filter(s=>s.customer===c.name), pays=DB.payments.filter(p=>p.customer===c.name);
+ document.getElementById('modalTitle').textContent='Customer 360 — '+c.name;
+ document.getElementById('modalBody').innerHTML=`<div class="kpi-row">${[['LIFETIME VALUE',money(c.total)],['PAID',money(c.paid)],['BALANCE',money(c.balance)],['ORDERS',orders.length]].map(x=>`<div class="mini-kpi"><small>${x[0]}</small><b>${x[1]}</b></div>`).join('')}</div>
+ <div class="section-gap panel"><div class="panel-head"><div class="panel-title">Profile</div></div><div class="panel-body"><div class="form-grid"><div><span class="muted">Phone</span><br>${esc(c.phone)}</div><div><span class="muted">WhatsApp</span><br>${esc(c.whatsapp)}</div><div><span class="muted">Type</span><br>${c.type}</div><div><span class="muted">Location</span><br>${esc(c.location)}</div></div></div></div>
+ <div class="section-gap panel"><div class="panel-head"><div class="panel-title">Orders & Payments</div></div><div class="panel-body"><div class="list">${orders.map(o=>`<div class="row"><div><b>${o.id}</b><div class="muted">${o.date}</div></div><div>${money(o.total)}</div><div>${money(o.paid)}</div><div><span class="pill ${o.status==='Paid'?'green':'gold'}">${o.status}</span></div></div>`).join('')}${pays.map(p=>`<div class="row"><div><b>Payment ${p.id}</b><div class="muted">${p.date}</div></div><div>${money(p.amount)}</div><div>${p.method}</div><div>${esc(p.reference)}</div></div>`).join('')}</div></div></div>`;
+ document.getElementById('modal').classList.add('open');
+}
+function renderWholesale(){
+ const pipeline=sum(DB.wholesale,'value'), weighted=DB.wholesale.reduce((a,x)=>a+x.value*x.prob/100,0);
+ return pageHead('WHOLESALE CRM','Wholesale pipeline','Manage leads, proposals, negotiation and distribution growth.',`<button class="primary" onclick="openModal('wholesale')">＋ New Lead</button>`)
+ +`<div class="kpi-row section-gap">${[['PIPELINE',money(pipeline)],['WEIGHTED PIPELINE',money(weighted)],['LEADS',DB.wholesale.length],['NEGOTIATION',DB.wholesale.filter(x=>x.stage==='Negotiation').length]].map(x=>`<div class="mini-kpi"><small>${x[0]}</small><b>${x[1]}</b></div>`).join('')}</div>
+ <div class="grid two section-gap"><div class="panel"><div class="panel-head"><div class="panel-title">Pipeline</div></div><div class="panel-body"><div class="bar-list">${DB.wholesale.map(w=>`<div class="bar-line"><span>${esc(w.name)}</span><div class="bar-track"><div class="bar-fill" style="width:${w.prob}%"></div></div><b>${w.prob}%</b></div>`).join('')}</div></div></div>
+ <div class="panel"><div class="panel-head"><div class="panel-title">Distribution Intelligence</div></div><div class="panel-body">${aiInsights().slice(1,4).map(i=>`<div class="insight"><strong>${i.title}</strong><p>${i.text}</p></div>`).join('')}</div></div></div>
+ <div class="panel section-gap"><div class="table-wrap"><table class="data-table"><thead><tr><th>Lead</th><th>Location</th><th>Value</th><th>Stage</th><th>Probability</th><th>Weighted</th><th></th></tr></thead><tbody>${DB.wholesale.map(w=>`<tr><td><b>${esc(w.name)}</b></td><td>${esc(w.location)}</td><td>${money(w.value)}</td><td><span class="pill gold">${w.stage}</span></td><td>${w.prob}%</td><td>${money(w.value*w.prob/100)}</td><td><button class="ghost-btn" onclick="deleteItem('wholesale','${w.id}')">×</button></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function renderPayments(){
+ const paid=sum(DB.payments,'amount'), cash=sum(DB.payments.filter(p=>p.method==='Cash'),'amount'),bank=sum(DB.payments.filter(p=>p.method==='Bank'),'amount'),mobile=sum(DB.payments.filter(p=>p.method==='Mobile Money'),'amount'),recv=DB.customers.reduce((a,c)=>a+c.balance,0);
+ return pageHead('PAYMENTS & CREDIT','Cashflow collection','Know who paid, who owes, how they paid and what remains.',`<button class="primary" onclick="openModal('payment')">＋ Record Payment</button>`)
+ +`<div class="kpi-row section-gap">${[['PAID TOTAL',money(paid)],['CASH',money(cash)],['BANK',money(bank)],['MOBILE MONEY',money(mobile)]].map(x=>`<div class="mini-kpi"><small>${x[0]}</small><b>${x[1]}</b></div>`).join('')}</div>
+ <div class="panel section-gap"><div class="panel-head"><div><div class="panel-title">Receivables Control</div><div class="panel-sub">Total outstanding: ${money(recv)}</div></div><span class="pill ${recv?'red':'green'}">${recv?'ACTION REQUIRED':'CLEAR'}</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Customer</th><th>Total Order Value</th><th>Paid</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead><tbody>${DB.customers.map(c=>`<tr><td><b>${esc(c.name)}</b></td><td>${money(c.total)}</td><td>${money(c.paid)}</td><td>${money(c.balance)}</td><td><span class="pill ${c.balance?'red':'green'}">${c.balance?'Credit / Due':'Paid'}</span></td><td><button class="ghost-btn" onclick="openPaymentFor('${c.name}')">Record</button></td></tr>`).join('')}</tbody></table></div></div>
+ <div class="panel section-gap"><div class="panel-head"><div class="panel-title">Payment History</div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Payment</th><th>Customer</th><th>Amount</th><th>Method</th><th>Network / Bank</th><th>Reference</th><th>Date</th></tr></thead><tbody>${DB.payments.slice().reverse().map(p=>`<tr><td>${p.id}</td><td>${esc(p.customer)}</td><td>${money(p.amount)}</td><td>${p.method}</td><td>${esc(p.network||'—')}</td><td>${esc(p.reference)}</td><td>${p.date}</td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function renderExpenses(){
+ const total=sum(DB.expenses,'amount'), revenue=sum(DB.sales,'total');
+ return pageHead('EXPENSES & CASHFLOW','Financial control','Track every operating cost and understand its effect on profit.',`<button class="primary" onclick="openModal('expense')">＋ Add Expense</button>`)
+ +`<div class="kpi-row section-gap">${[['EXPENSES',money(total)],['REVENUE',money(revenue)],['NET BEFORE TAX',money(revenue-total)],['EXPENSE RATIO',revenue?Math.round(total/revenue*100)+'%':'0%']].map(x=>`<div class="mini-kpi"><small>${x[0]}</small><b>${x[1]}</b></div>`).join('')}</div>
+ <div class="panel section-gap"><div class="table-wrap"><table class="data-table"><thead><tr><th>ID</th><th>Category</th><th>Amount</th><th>Date</th><th>Note</th><th></th></tr></thead><tbody>${DB.expenses.slice().reverse().map(e=>`<tr><td>${e.id}</td><td>${e.category}</td><td>${money(e.amount)}</td><td>${e.date}</td><td>${esc(e.note)}</td><td><button class="ghost-btn" onclick="deleteItem('expenses','${e.id}')">×</button></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function renderMarketing(){
+ const spend=sum(DB.marketing,'spend'), rev=sum(DB.marketing,'revenue'), leads=sum(DB.marketing,'leads'),orders=sum(DB.marketing,'orders');
+ return pageHead('MARKETING INTELLIGENCE','Growth engine','Connect campaign spend, leads, orders and revenue.',`<button class="primary" onclick="openModal('marketing')">＋ Add Campaign</button>`)
+ +`<div class="kpi-row section-gap">${[['SPEND',money(spend)],['ATTRIBUTED REVENUE',money(rev)],['LEADS',leads],['ORDERS',orders]].map(x=>`<div class="mini-kpi"><small>${x[0]}</small><b>${x[1]}</b></div>`).join('')}</div>
+ <div class="panel section-gap"><div class="table-wrap"><table class="data-table"><thead><tr><th>Campaign</th><th>Channel</th><th>Spend</th><th>Leads</th><th>Orders</th><th>Revenue</th><th>ROAS</th></tr></thead><tbody>${DB.marketing.map(m=>`<tr><td><b>${esc(m.campaign)}</b></td><td>${m.channel}</td><td>${money(m.spend)}</td><td>${m.leads}</td><td>${m.orders}</td><td>${money(m.revenue)}</td><td>${m.spend?((m.revenue/m.spend).toFixed(1)+'×'):'—'}</td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function renderReports(){
+ const revenue=sum(DB.sales,'total'),paid=sum(DB.sales,'paid'),expenses=sum(DB.expenses,'amount'),cogs=DB.sales.reduce((a,s)=>a+s.items*9000,0),gp=revenue-cogs,np=gp-expenses;
+ return pageHead('REPORTS & ANALYTICS','Executive reporting','Financial intelligence and operational metrics for decision-making.',`<button class="secondary" onclick="exportCSV('sales')">Export Sales</button><button class="primary" onclick="exportCSV('customers')">Export Customers</button>`)
+ +`<div class="grid three section-gap">${[['Revenue',money(revenue)],['COGS',money(cogs)],['Gross Profit',money(gp)],['Expenses',money(expenses)],['Net Profit',money(np)],['Gross Margin',revenue?Math.round(gp/revenue*100)+'%':'0%']].map(x=>`<div class="metric"><div class="metric-label">${x[0]}</div><div class="metric-value">${x[1]}</div><div class="metric-foot">Executive KPI</div></div>`).join('')}</div>
+ <div class="grid two section-gap"><div class="panel"><div class="panel-head"><div class="panel-title">Monthly Performance</div></div><div class="panel-body">${svgChart()}</div></div><div class="panel"><div class="panel-head"><div class="panel-title">CEO Financial Snapshot</div></div><div class="panel-body">${aiInsights().map(i=>`<div class="insight"><strong>${i.title}</strong><p>${i.text}</p></div>`).join('')}</div></div></div>`;
+}
+function aiInsights(){
+ const rev=sum(DB.sales,'total'),paid=sum(DB.sales,'paid'),recv=rev-paid,low=DB.products.filter(p=>p.stock<=p.reorder).length,pipeline=sum(DB.wholesale,'value');
+ return [
+  {title:recv>0?'Receivables need follow-up':'Collections are clear',text:recv>0?`${money(recv)} remains outstanding. Prioritize the largest balances and link every collection to the customer profile.`:'No outstanding customer balance is currently visible in the local dataset.'},
+  {title:low?`${low} stock alerts detected`:'Inventory is within reorder thresholds',text:low?'Review low-stock SKUs before the next sales push so marketing does not create avoidable stock-outs.':'Current stock levels are above the configured reorder points.'},
+  {title:'Wholesale pipeline',text:`${money(pipeline)} is currently visible in the pipeline. Weighted pipeline is ${money(DB.wholesale.reduce((a,x)=>a+x.value*x.prob/100,0))}.`},
+  {title:'Payment mix',text:`Cash, bank and mobile-money transactions are separated in the Payments engine so management can reconcile collections.`}
+ ];
+}
+function renderAI(){
+ return pageHead('AI CEO','Business intelligence workspace','Ask the system about revenue, stock, customers, cashflow, wholesale and growth.',`<button class="secondary" onclick="aiQuick('Give me the top three risks in my business right now.')">Run Risk Scan</button>`)
+ +`<div class="ai-shell section-gap"><div class="panel ai-main"><div class="panel-head"><div><div class="panel-title">HAJREEN AI CEO</div><div class="panel-sub">Decision support layer — grounded in the current business dataset</div></div><span class="pill green">ONLINE ENGINE</span></div><div id="aiFeed" class="ai-feed"><div class="msg ai"><b>HAJREEN AI CEO</b><br>Welcome. I can analyse sales, gross profit, expenses, receivables, stock, customers, payments, wholesale and marketing. Ask a business question.</div></div><div class="ai-compose"><input id="aiInput" placeholder="Ask: What should I focus on today?" onkeydown="if(event.key==='Enter')askAI()"><button class="primary" onclick="askAI()">Ask AI →</button></div></div>
+ <div class="panel"><div class="panel-head"><div class="panel-title">Decision Cards</div></div><div class="panel-body">${[['Profit review','Explain my profit and what is reducing it.'],['Cash collection','Who owes the most and what should I follow up?'],['Inventory','Which products need reorder attention?'],['Wholesale','How strong is the wholesale pipeline?'],['Growth','Where should I focus marketing?']].map(x=>`<button class="secondary" style="width:100%;text-align:left;margin-bottom:8px" onclick="aiQuick('${x[1]}')"><b>${x[0]}</b><br><span class="muted">${x[1]}</span></button>`).join('')}</div></div></div>`;
+}
+function aiQuick(q){document.getElementById('aiInput').value=q;askAI()}
+function askAI(){
+ const input=document.getElementById('aiInput'),q=input.value.trim();if(!q)return;
+ const feed=document.getElementById('aiFeed');feed.innerHTML+=`<div class="msg user">${esc(q)}</div>`;
+ const rev=sum(DB.sales,'total'),paid=sum(DB.sales,'paid'),recv=rev-paid,exp=sum(DB.expenses,'amount'),low=DB.products.filter(p=>p.stock<=p.reorder),topDebt=DB.customers.slice().sort((a,b)=>b.balance-a.balance)[0],pipe=sum(DB.wholesale,'value');
+ let a;
+ const l=q.toLowerCase();
+ if(l.includes('stock')||l.includes('inventory')||l.includes('reorder'))a=`Inventory scan: ${low.length} SKU(s) need attention. ${low.map(x=>x.name+' ('+x.stock+' units)').join(', ')||'No low-stock items found'}.`;
+ else if(l.includes('owe')||l.includes('receivable')||l.includes('credit')||l.includes('payment'))a=`Collections: outstanding balance is ${money(recv)}. The largest visible balance is ${topDebt?topDebt.name+' — '+money(topDebt.balance):'none'}. Payment records are separated by cash, bank and mobile money.`;
+ else if(l.includes('profit')||l.includes('margin')){const cogs=DB.sales.reduce((x,s)=>x+s.items*9000,0),gp=rev-cogs,np=gp-exp;a=`Profit scan: revenue ${money(rev)}, estimated COGS ${money(cogs)}, gross profit ${money(gp)}, expenses ${money(exp)}, net profit ${money(np)}. Gross margin is ${rev?Math.round(gp/rev*100):0}%.`;
+ }else if(l.includes('wholesale')||l.includes('pipeline'))a=`Wholesale scan: pipeline is ${money(pipe)} across ${DB.wholesale.length} leads. Weighted pipeline is ${money(DB.wholesale.reduce((x,w)=>x+w.value*w.prob/100,0))}.`;
+ else if(l.includes('marketing')||l.includes('growth')){const m=DB.marketing.slice().sort((a,b)=>(b.revenue/b.spend)-(a.revenue/a.spend))[0];a=`Growth scan: ${m?m.campaign+' currently has the strongest visible ROAS at '+(m.revenue/m.spend).toFixed(1)+'×. Compare this with lead quality and repeat purchases before increasing spend.':'No campaign data.'}`; }
+ else a=`CEO summary: revenue ${money(rev)}, paid ${money(paid)}, receivables ${money(recv)}, inventory ${money(DB.products.reduce((x,p)=>x+p.stock*p.cost,0))}, wholesale pipeline ${money(pipe)}, low-stock SKUs ${low.length}.`;
+ feed.innerHTML+=`<div class="msg ai"><b>HAJREEN AI CEO</b><br>${esc(a)}</div>`;feed.scrollTop=feed.scrollHeight;input.value='';
+}
+function renderTeam(){return pageHead('TEAM','People & execution','Track key roles and operating ownership.',`<button class="primary" onclick="openModal('team')">＋ Add Team Member</button>`)+`<div class="grid three section-gap">${DB.team.map(t=>`<div class="panel"><div class="panel-body"><div class="eyebrow">${t.role}</div><h3 style="margin:8px 0">${esc(t.name)}</h3><span class="pill green">${t.status}</span></div></div>`).join('')}</div>`}
+function renderSettings(){
+ return pageHead('SETTINGS','System control','Manage the single-file engine, backups and integration readiness.',`<button class="secondary" onclick="exportBackup()">Export Backup</button><button class="primary" onclick="document.getElementById('importFile').click()">Import Backup</button>`)
+ +`<input id="importFile" type="file" accept=".json" class="hidden" onchange="importBackup(this)">
+ <div class="grid two section-gap"><div class="panel"><div class="panel-head"><div class="panel-title">Deployment Architecture</div></div><div class="panel-body">
+ <div class="insight"><strong>Single-file UI + engine</strong><p>This V16 build keeps the interface, business calculations, forms, tables, dashboards and AI decision layer together in one HTML file.</p></div>
+ <div class="insight"><strong>Cloud-ready</strong><p>For production cloud sync, connect the backend gateway to Supabase and keep OpenAI secrets server-side. Never paste secret API keys into this HTML.</p></div>
+ <div class="insight"><strong>Responsive</strong><p>The same design system adapts across desktop, tablet and mobile without changing the business model.</p></div>
+ </div></div>
+ <div class="panel"><div class="panel-head"><div class="panel-title">Data Controls</div></div><div class="panel-body"><button class="secondary" style="width:100%;margin-bottom:8px" onclick="exportBackup()">Download JSON Backup</button><button class="secondary" style="width:100%;margin-bottom:8px" onclick="exportCSV('sales')">Export Sales CSV</button><button class="secondary" style="width:100%;margin-bottom:8px" onclick="exportCSV('inventory')">Export Inventory CSV</button><button class="secondary danger" style="width:100%" onclick="resetData()">Reset Demo Data</button></div></div></div>`;
+}
+function openModal(type){
+ modalMode=type;document.getElementById('modal').classList.add('open');
+ const titles={sale:'New Sale',product:'Add Product',customer:'Add Customer',payment:'Record Payment',expense:'Add Expense',wholesale:'New Wholesale Lead',marketing:'Add Marketing Campaign',team:'Add Team Member',quick:'Quick Actions'};
+ document.getElementById('modalTitle').textContent=titles[type]||'Action';
+ const body=document.getElementById('modalBody');
+ if(type==='quick'){body.innerHTML=`<div class="grid two"><button class="primary" onclick="closeModal();openModal('sale')">＋ New Sale</button><button class="secondary" onclick="closeModal();openModal('payment')">◈ Record Payment</button><button class="secondary" onclick="closeModal();openModal('product')">＋ Add Product</button><button class="secondary" onclick="closeModal();openModal('customer')">♙ Add Customer</button></div>`;return}
+ if(type==='sale')body.innerHTML=`<form onsubmit="addSale(event)"><div class="form-grid"><div class="field"><label>Customer</label><select id="fCustomer" required>${DB.customers.map(c=>`<option>${esc(c.name)}</option>`).join('')}</select></div><div class="field"><label>Items / Quantity</label><input id="fItems" type="number" min="1" value="1" required></div><div class="field"><label>Total Order Value</label><input id="fTotal" type="number" min="0" required></div><div class="field"><label>Amount Paid</label><input id="fPaid" type="number" min="0" value="0" required></div><div class="field"><label>Payment Method</label><select id="fMethod"><option>Cash</option><option>Bank</option><option>Mobile Money</option></select></div><div class="field"><label>Date</label><input id="fDate" value="${new Date().toISOString().slice(0,10)}" required></div></div><div class="form-actions"><button type="button" class="secondary" onclick="closeModal()">Cancel</button><button class="primary">Save Sale</button></div></form>`;
+ if(type==='product')body.innerHTML=`<form onsubmit="addProduct(event)"><div class="form-grid"><div class="field"><label>Product Name</label><input id="pName" required></div><div class="field"><label>Category</label><input id="pCat" required></div><div class="field"><label>Cost Price</label><input id="pCost" type="number" required></div><div class="field"><label>Selling Price</label><input id="pSell" type="number" required></div><div class="field"><label>Opening Stock</label><input id="pStock" type="number" required></div><div class="field"><label>Reorder Level</label><input id="pReorder" type="number" value="10" required></div></div><div class="form-actions"><button type="button" class="secondary" onclick="closeModal()">Cancel</button><button class="primary">Add Product</button></div></form>`;
+ if(type==='customer')body.innerHTML=`<form onsubmit="addCustomer(event)"><div class="form-grid"><div class="field"><label>Full Name</label><input id="cName" required></div><div class="field"><label>Phone</label><input id="cPhone" required></div><div class="field"><label>WhatsApp</label><input id="cWa"></div><div class="field"><label>Customer Type</label><select id="cType"><option>Retail</option><option>Wholesale</option><option>Distributor</option></select></div><div class="field full"><label>Location</label><input id="cLocation"></div></div><div class="form-actions"><button type="button" class="secondary" onclick="closeModal()">Cancel</button><button class="primary">Save Customer</button></div></form>`;
+ if(type==='payment')body.innerHTML=`<form onsubmit="addPayment(event)"><div class="form-grid"><div class="field"><label>Customer</label><select id="payCustomer">${DB.customers.map(c=>`<option>${esc(c.name)}</option>`).join('')}</select></div><div class="field"><label>Amount</label><input id="payAmount" type="number" min="1" required></div><div class="field"><label>Method</label><select id="payMethod"><option>Cash</option><option>Bank</option><option>Mobile Money</option></select></div><div class="field"><label>Network / Bank</label><input id="payNetwork" placeholder="M-Pesa / NMB / CRDB..."></div><div class="field"><label>Transaction Reference</label><input id="payRef" required></div><div class="field"><label>Date</label><input id="payDate" value="${new Date().toISOString().slice(0,10)}" required></div></div><div class="form-actions"><button type="button" class="secondary" onclick="closeModal()">Cancel</button><button class="primary">Record Payment</button></div></form>`;
+ if(type==='expense')body.innerHTML=`<form onsubmit="addExpense(event)"><div class="form-grid"><div class="field"><label>Category</label><select id="eCat"><option>Transport</option><option>Marketing</option><option>Operations</option><option>Rent</option><option>Payroll</option><option>Other</option></select></div><div class="field"><label>Amount</label><input id="eAmount" type="number" required></div><div class="field"><label>Date</label><input id="eDate" value="${new Date().toISOString().slice(0,10)}" required></div><div class="field"><label>Note</label><input id="eNote"></div></div><div class="form-actions"><button type="button" class="secondary" onclick="closeModal()">Cancel</button><button class="primary">Save Expense</button></div></form>`;
+ if(type==='wholesale')body.innerHTML=`<form onsubmit="addWholesale(event)"><div class="form-grid"><div class="field"><label>Business / Lead</label><input id="wName" required></div><div class="field"><label>Location</label><input id="wLoc" required></div><div class="field"><label>Potential Value</label><input id="wValue" type="number" required></div><div class="field"><label>Stage</label><select id="wStage"><option>New Lead</option><option>Qualified</option><option>Proposal</option><option>Negotiation</option></select></div><div class="field"><label>Probability %</label><input id="wProb" type="number" min="0" max="100" value="30"></div></div><div class="form-actions"><button type="button" class="secondary" onclick="closeModal()">Cancel</button><button class="primary">Save Lead</button></div></form>`;
+ if(type==='marketing')body.innerHTML=`<form onsubmit="addMarketing(event)"><div class="form-grid"><div class="field"><label>Campaign</label><input id="mCamp" required></div><div class="field"><label>Channel</label><input id="mChannel" placeholder="Instagram / WhatsApp / TikTok"></div><div class="field"><label>Spend</label><input id="mSpend" type="number" required></div><div class="field"><label>Leads</label><input id="mLeads" type="number" required></div><div class="field"><label>Orders</label><input id="mOrders" type="number" required></div><div class="field"><label>Revenue</label><input id="mRevenue" type="number" required></div></div><div class="form-actions"><button type="button" class="secondary" onclick="closeModal()">Cancel</button><button class="primary">Save Campaign</button></div></form>`;
+ if(type==='team')body.innerHTML=`<form onsubmit="addTeam(event)"><div class="form-grid"><div class="field"><label>Name</label><input id="tName" required></div><div class="field"><label>Role</label><input id="tRole" required></div></div><div class="form-actions"><button type="button" class="secondary" onclick="closeModal()">Cancel</button><button class="primary">Add Member</button></div></form>`;
+}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function addSale(e){e.preventDefault();const total=+fTotal.value,paid=+fPaid.value,customer=fCustomer.value;DB.sales.push({id:id('S'),customer,items:+fItems.value,total,paid,method:fMethod.value,date:fDate.value,status:paid>=total?'Paid':'Partial'});const c=DB.customers.find(x=>x.name===customer);if(c){c.total+=total;c.paid+=paid;c.balance+=total-paid;c.last=fDate.value}closeModal();save();toast('Sale recorded')}
+function deleteSale(x){if(!confirm('Delete this sale?'))return;const s=DB.sales.find(v=>v.id===x);if(s){const c=DB.customers.find(v=>v.name===s.customer);if(c){c.total-=s.total;c.paid-=s.paid;c.balance-=s.total-s.paid}}DB.sales=DB.sales.filter(v=>v.id!==x);save();toast('Sale deleted')}
+function addProduct(e){e.preventDefault();DB.products.push({id:id('P'),name:pName.value,category:pCat.value,cost:+pCost.value,sell:+pSell.value,stock:+pStock.value,reorder:+pReorder.value});closeModal();save();toast('Product added')}
+function deleteProduct(x){if(!confirm('Delete this product?'))return;DB.products=DB.products.filter(v=>v.id!==x);save();toast('Product removed')}
+function addCustomer(e){e.preventDefault();DB.customers.push({id:id('C'),name:cName.value,phone:cPhone.value,whatsapp:cWa.value||cPhone.value,type:cType.value,location:cLocation.value,total:0,paid:0,balance:0,last:'—'});closeModal();save();toast('Customer added')}
+function addPayment(e){e.preventDefault();const customer=payCustomer.value,amount=+payAmount.value;DB.payments.push({id:id('PAY'),customer,amount,method:payMethod.value,network:payNetwork.value,reference:payRef.value,date:payDate.value});const c=DB.customers.find(x=>x.name===customer);if(c){c.paid+=amount;c.balance=Math.max(0,c.balance-amount)}closeModal();save();toast('Payment recorded')}
+function openPaymentFor(name){openModal('payment');setTimeout(()=>{document.getElementById('payCustomer').value=name},0)}
+function addExpense(e){e.preventDefault();DB.expenses.push({id:id('E'),category:eCat.value,amount:+eAmount.value,date:eDate.value,note:eNote.value});closeModal();save();toast('Expense added')}
+function addWholesale(e){e.preventDefault();DB.wholesale.push({id:id('W'),name:wName.value,location:wLoc.value,value:+wValue.value,stage:wStage.value,prob:+wProb.value});closeModal();save();toast('Wholesale lead added')}
+function addMarketing(e){e.preventDefault();DB.marketing.push({id:id('M'),campaign:mCamp.value,channel:mChannel.value,spend:+mSpend.value,leads:+mLeads.value,orders:+mOrders.value,revenue:+mRevenue.value});closeModal();save();toast('Campaign added')}
+function addTeam(e){e.preventDefault();DB.team.push({id:id('T'),name:tName.value,role:tRole.value,status:'Active'});closeModal();save();toast('Team member added')}
+function deleteItem(collection,x){if(!confirm('Delete this item?'))return;DB[collection]=DB[collection].filter(v=>v.id!==x);save();toast('Deleted')}
+function globalSearch(q){if(!q)return;const l=q.toLowerCase();const c=DB.customers.find(x=>x.name.toLowerCase().includes(l)||x.phone.includes(q));const p=DB.products.find(x=>x.name.toLowerCase().includes(l)||x.id.toLowerCase()===l);if(c){showPage('customers');setTimeout(()=>toast('Customer found: '+c.name),50)}else if(p){showPage('inventory');setTimeout(()=>toast('Product found: '+p.name),50)}}
+function exportBackup(){const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});download(blob,'HAJREEN_V16_BACKUP.json')}
+function exportCSV(type){const rows=DB[type]||[];if(!rows.length){toast('Nothing to export');return}const cols=Object.keys(rows[0]);const csv=[cols.join(','),...rows.map(r=>cols.map(c=>`"${String(r[c]??'').replace(/"/g,'""')}"`).join(','))].join('\\n');download(new Blob([csv],{type:'text/csv'}),'HAJREEN_'+type.toUpperCase()+'.csv')}
+function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importBackup(input){const file=input.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{DB=merge(seed,JSON.parse(r.result));save();toast('Backup imported')}catch(e){toast('Invalid backup file')}};r.readAsText(file)}
+function resetData(){if(!confirm('Reset all data to the original HAJREEN demo dataset?'))return;DB=structuredClone(seed);save();toast('Demo data restored')}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+renderAll();
+</script>
+</body>
+</html>
